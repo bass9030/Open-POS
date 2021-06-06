@@ -1,0 +1,81 @@
+﻿<Window x:Class="pos.edit_product"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
+        xmlns:local="clr-namespace:pos"
+        mc:Ignorable="d"
+        Title="edit_product" Height="707.578" Width="836.583">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="500*"/>
+            <RowDefinition Height="250*"/>
+        </Grid.RowDefinitions>
+
+        <ListView x:Name="product_list" SelectionChanged="product_list_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="바코드" Width="200" DisplayMemberBinding="{Binding barcode}"/>
+                    <GridViewColumn Header="상품명" Width="400" DisplayMemberBinding="{Binding product_name}"/>
+                    <GridViewColumn Header="금액" Width="100" DisplayMemberBinding="{Binding product_money}"/>
+                    <GridViewColumn Header="수량" Width="50" DisplayMemberBinding="{Binding product_count}"/>
+                    <GridViewColumn Header="할인" Width="70" DisplayMemberBinding="{Binding product_sale}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="20*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid HorizontalAlignment="Center" Height="162" Width="218" VerticalAlignment="Center" Margin="0 0 0 0" Grid.Column="1">
+                <controls:VideoCaptureElement x:Name="video" LoadedBehavior="Play" VideoCaptureSource="" Stretch="Uniform"/>
+                <Grid VerticalAlignment="Center" Height="1" Background="Red"/>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50*"/>
+                </Grid.RowDefinitions>
+                <Label Content="바코드 번호" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20 5 5 5"/>
+                <TextBox x:Name="barcode" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="570" Margin="0 20 0 0" DataObject.Pasting="barcode_Pasting"  PreviewTextInput="barcode_PreviewTextInput"/>
+
+                <Label Content="상품 이름" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20 5 5 5"/>
+                <TextBox x:Name="goods_name" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="570" Margin="0 20 0 0"/>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="500*"/>
+                        <ColumnDefinition Width="500*"/>
+                        <ColumnDefinition Width="500*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="상품 갯수" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20 5 5 5"/>
+                    <TextBox x:Name="goods_count" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Height="25" Width="150" Margin="20 20 5 0" DataObject.Pasting="barcode_Pasting" PreviewTextInput="barcode_PreviewTextInput"/>
+
+                    <Label Content="상품 가격(쉼표 없이 입력)" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20 5 5 5"/>
+                    <TextBox x:Name="goods_price" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Height="25" Width="150" Margin="20 20 5 0" DataObject.Pasting="barcode_Pasting" PreviewTextInput="barcode_PreviewTextInput"/>
+
+                    <Label Content="상품 할인율(0~100)" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20 5 5 5"/>
+                    <TextBox x:Name="goods_sale" Text="0" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Height="25" Width="150" Margin="20 20 5 0" DataObject.Pasting="barcode_Pasting" PreviewTextInput="barcode_PreviewTextInput"/>
+
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="500*"/>
+                        <ColumnDefinition Width="500*"/>
+                        <ColumnDefinition Width="500*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="confirm" Content="적용" Margin="5 5 5 5" Width="100" Height="40" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="confirm_Click"/>
+                    <Button x:Name="ok" Content="확인" Margin="5 5 5 5" Width="100" Height="40" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ok_Click"/>
+                    <Button x:Name="cancel" Content="취소" Margin="5 5 5 5" Width="100" Height="40" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="cancel_Click"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
