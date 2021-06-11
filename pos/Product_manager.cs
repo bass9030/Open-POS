@@ -8,7 +8,7 @@ namespace pos
     {
         public string barcode { get; set; }
         public string product_name { get; set; }
-        public int productType { get; set; }
+        public productTypeInfo productType { get; set; }
         public ulong money { get; set; }
         public string product_money
         {
@@ -39,7 +39,11 @@ namespace pos
         }
     }
 
-    public class ProductTypeInfo
+    public class productTypeInfo
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+    }
 
     public class sale_info
     {
@@ -188,6 +192,36 @@ namespace pos
             }
         }
 
+        public productTypeInfo GetProductTypeInfo(int id)
+        {
+            using (SQLiteConnection conn = new SQLiteConnection("data source=product_list.db"))
+            {
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(conn))
+                {
+                    cmd.CommandText = $@"select * from sales where id = {id}";
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        if (read.HasRows)
+                        {
+                            while (read.Read())
+                            {
+                                return new productTypeInfo()
+                                {
+                                    id = Convert.ToInt32(read["id"]),
+                                    name = read["name"].ToString(),
+                                };
+                            }
+                            return null;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
         public product_info GetProductInfo(string barcodeNumber)
         {
             using (SQLiteConnection conn = new SQLiteConnection("data source=product_list.db"))
@@ -209,7 +243,7 @@ namespace pos
                                     product_money = money, 
                                     sale = GetSaleInfo(Convert.ToInt32(read["sale"])), 
                                     product_count = Convert.ToInt32(read["count"]),
-                                    productType = 
+                                    productType = GetProductTypeInfo(Convert.ToInt32(read["type"]))
                                 };
                             }
                         }
@@ -245,7 +279,8 @@ namespace pos
                                     product_name = name, 
                                     product_money = money, 
                                     sale = GetSaleInfo(Convert.ToInt32(read["sale"])), 
-                                    product_count = Convert.ToInt32(read["count"])
+                                    product_count = Convert.ToInt32(read["count"]),
+                                    productType = GetProductTypeInfo(Convert.ToInt32(read["type"]))
                                 });
                             }
                         }
