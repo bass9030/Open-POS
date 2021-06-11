@@ -8,6 +8,7 @@ namespace pos
     {
         public string barcode { get; set; }
         public string product_name { get; set; }
+        public int productType { get; set; }
         public ulong money { get; set; }
         public string product_money
         {
@@ -20,16 +21,12 @@ namespace pos
                 money = Convert.ToUInt64(value);
             }
         }
-        public int sale { get; set; }
+        public sale_info sale { get; set; }
         public string product_sale
         {
             get
             {
-                return sale + "%";
-            }
-            set
-            {
-                sale = Convert.ToInt32(value);
+                return sale.sale + "%";
             }
         }
         public int product_count { get; set; }
@@ -37,16 +34,19 @@ namespace pos
         {
             get
             {
-                return String.Format("{0:#,0}", (Convert.ToDouble(money * Convert.ToUInt64(product_count)) * (1.0 - (Convert.ToDouble(sale) / 100.0))));
+                return String.Format("{0:#,0}", (Convert.ToDouble(money * Convert.ToUInt64(product_count)) * (1.0 - (Convert.ToDouble(sale.sale) / 100.0))));
             }
         }
     }
+
+    public class ProductTypeInfo
 
     public class sale_info
     {
         public int id { get; set; }
         public string name { get; set; }
         public int sale { get; set; }
+        public int productType { get; set; }
     }
 
     class Product_manager
@@ -96,19 +96,62 @@ namespace pos
                     conn.Open();
                     using (SQLiteCommand cmd = new SQLiteCommand(conn))
                     {
-                        string command = @"create table goods(barcode_id text, name text, money integer, sale interger, count interger);";
+                        string command = @"create table goods(barcode_id text, name text, money integer, sale interger, count interger, type interger);";
                         cmd.CommandText = command;
                         cmd.ExecuteNonQuery();
-                        command = @"create table sales(id interger, PRIMARY KEY(id AUTOINCREMENT), name text, saleper interger);";
+                        command = @"create table sales(id interger, PRIMARY KEY(id AUTOINCREMENT), name text, saleper interger, productType interger);";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
+                        command = @"create table productType(id interger, PRIMARY KEY(id AUTOINCREMENT), name text);";
                         cmd.CommandText = command;
                         cmd.ExecuteNonQuery();
                     }
+                    conn.Close();
                 }
                 return true;
             }
             catch
             {
                 return false;
+            }
+        }
+
+        public sale_info[] GetAllSaleInfos()
+        {
+            using (SQLiteConnection conn = new SQLiteConnection("data source=product_list.db"))
+            {
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(conn))
+                {
+                    cmd.CommandText = $@"select * from sales";
+                    int RowCount = Convert.ToInt32(cmd.ExecuteScalar());
+                    sale_info[] sale_infos = new sale_info[RowCount];
+                    cmd.CommandText = $@"select * from sales";
+                    int idx = 0;
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        if (read.HasRows)
+                        {
+                            while (read.Read())
+                            {
+                                sale_infos[idx] = new sale_info()
+                                {
+                                    id = Convert.ToInt32(read["id"]),
+                                    name = read["name"].ToString(),
+                                    sale = Convert.ToInt32(read["saleper"]),
+                                    productType = Convert.ToInt32(read["productType"])
+                                };
+                                idx++;
+                            }
+                            if (sale_infos.Length != 0) return sale_infos;
+                            return null;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
             }
         }
 
@@ -126,8 +169,19 @@ namespace pos
                         {
                             while(read.Read())
                             {
-
+                                return new sale_info()
+                                {
+                                    id = Convert.ToInt32(read["id"]),
+                                    name = read["name"].ToString(),
+                                    sale = Convert.ToInt32(read["saleper"]),
+                                    productType = Convert.ToInt32(read["productType"])
+                                };
                             }
+                            return null;
+                        }
+                        else
+                        {
+                            return null;
                         }
                     }
                 }
@@ -149,7 +203,14 @@ namespace pos
                             while (read.Read())
                             {
                                 string barcode = read["barcode_id"].ToString(), name = read["name"].ToString(), money = read["money"].ToString();
-                                return new product_info() { barcode = barcode, product_name = name, product_money = money, product_sale = read["sale"].ToString(), product_count = Convert.ToInt32(read["count"]) };
+                                return new product_info() { 
+                                    barcode = barcode, 
+                                    product_name = name, 
+                                    product_money = money, 
+                                    sale = GetSaleInfo(Convert.ToInt32(read["sale"])), 
+                                    product_count = Convert.ToInt32(read["count"]),
+                                    productType = 
+                                };
                             }
                         }
                         else
@@ -179,7 +240,13 @@ namespace pos
                             while (read.Read())
                             {
                                 string barcode = read["barcode_id"].ToString(), name = read["name"].ToString(), money = read["money"].ToString();
-                                list.Add(new product_info() { barcode = barcode, product_name = name, product_money = money, product_sale = read["sale"].ToString(), product_count = Convert.ToInt32(read["count"]) });
+                                list.Add(new product_info() { 
+                                    barcode = barcode, 
+                                    product_name = name, 
+                                    product_money = money, 
+                                    sale = GetSaleInfo(Convert.ToInt32(read["sale"])), 
+                                    product_count = Convert.ToInt32(read["count"])
+                                });
                             }
                         }
                     }
@@ -235,7 +302,7 @@ namespace pos
                 using (SQLiteCommand cmd = new SQLiteCommand(conn))
                 {
                     //barcode_id text, name text, money integer, sale interger, count interger
-                    cmd.CommandText = $@"update goods set barcode_id = '{newProductInfo.barcode}', name = '{newProductInfo.product_name}', money = {newProductInfo.money}, sale = {newProductInfo.sale}, count = {newProductInfo.product_count} where barcode_id = '{barcodeNumber}'";
+                    cmd.CommandText = $@"update goods set barcode_id = '{newProductInfo.barcode}', sale={newProductInfo.sale.id} name = '{newProductInfo.product_name}', money = {newProductInfo.money}, productType = {newProductInfo.productType}, count = {newProductInfo.product_count} where barcode_id = '{barcodeNumber}'";
                     cmd.ExecuteNonQuery();
                 }
                 conn.Close();

@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\bass9\source\repos\POS\pos\obj\x64\Debug\
+C:\Users\bass9\source\repos\pos\pos\obj\x64\Debug\
 pos
 none
 false
 DEBUG;TRACE
-C:\Users\bass9\source\repos\POS\pos\App.xaml
+C:\Users\bass9\source\repos\pos\pos\App.xaml
 7493515749
 
 14-821814386
-82402277013
+82-1646338591
 add_goods.xaml;camara_settings.xaml;edit_product.xaml;MainWindow.xaml;product_count_change.xaml;product_sale_change.xaml;setting.xaml;
 
-True
+False
 
