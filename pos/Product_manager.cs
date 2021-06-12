@@ -192,6 +192,37 @@ namespace pos
             }
         }
 
+        public productTypeInfo[] GetAllproductTypeInfos()
+        {
+            using (SQLiteConnection conn = new SQLiteConnection("data source=product_list.db"))
+            {
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(conn))
+                {
+                    cmd.CommandText = $@"select * from sales where id = {id}";
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        if (read.HasRows)
+                        {
+                            while (read.Read())
+                            {
+                                return new productTypeInfo()
+                                {
+                                    id = Convert.ToInt32(read["id"]),
+                                    name = read["name"].ToString(),
+                                };
+                            }
+                            return null;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
         public productTypeInfo GetProductTypeInfo(int id)
         {
             using (SQLiteConnection conn = new SQLiteConnection("data source=product_list.db"))
