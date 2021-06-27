@@ -50,3 +50,16 @@ C:\Users\bass9\source\repos\POS\pos\obj\x64\Debug\camara_settings.g.cs
 C:\Users\bass9\source\repos\POS\pos\obj\x64\Debug\camara_settings.baml
 C:\Users\bass9\source\repos\POS\pos\obj\x64\Debug\edit_product.g.cs
 C:\Users\bass9\source\repos\POS\pos\obj\x64\Debug\edit_product.baml
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\pos.csproj.AssemblyReference.cache
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\add_goods.g.cs
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\camara_settings.g.cs
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\edit_product.g.cs
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\MainWindow.g.cs
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\product_count_change.g.cs
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\product_sale_change.g.cs
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\setting.g.cs
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\App.g.cs
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\pos_MarkupCompile.cache
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\pos_MarkupCompile.lref
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\pos.exe
+C:\Users\bass9030\Documents\Open-POS\pos\obj\x64\Debug\pos.pdb
